@@ -21,16 +21,19 @@ public class TaskController {
     }
 
     @GetMapping
-    public String list(Model model) {
-        List<Task> tasks = taskService.findAll();
+    public String list(@RequestParam(required = false) String filter, Model model) {
+        Priority priority = (filter != null && !filter.isEmpty()) ? Priority.valueOf(filter) : null;
+        List<Task> tasks = priority != null ? taskService.findByPriority(priority) : taskService.findAll();
         model.addAttribute("tasks", tasks);
         model.addAttribute("priorities", Priority.values());
+        model.addAttribute("filter", priority);
         return "tasks/index";
     }
 
     @PostMapping("/{id}/priority")
-    public String updatePriority(@PathVariable Long id, @RequestParam Priority priority) {
+    public String updatePriority(@PathVariable Long id, @RequestParam Priority priority,
+                                 @RequestParam(required = false) String filter) {
         taskService.updatePriority(id, priority);
-        return "redirect:/tasks";
+        return (filter != null && !filter.isEmpty()) ? "redirect:/tasks?filter=" + filter : "redirect:/tasks";
     }
 }

@@ -20,6 +20,29 @@
             color: #111;
         }
 
+        .filter-bar {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+            max-width: 720px;
+        }
+
+        .filter-bar label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .filter-select {
+            padding: 0.35rem 0.75rem;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            background: #fff;
+            cursor: pointer;
+        }
+
         .task-list {
             display: grid;
             gap: 1rem;
@@ -118,6 +141,19 @@
 <body>
     <h1>Tasks</h1>
 
+    <div class="filter-bar">
+        <label for="filterSelect">Filter by priority:</label>
+        <form method="get" action="/tasks">
+            <select id="filterSelect" name="filter" class="filter-select" onchange="this.form.submit()">
+                <option value="" th:selected="${filter == null}">All</option>
+                <option th:each="p : ${priorities}"
+                        th:value="${p.name()}"
+                        th:text="${p.name()}"
+                        th:selected="${p == filter}">MEDIUM</option>
+            </select>
+        </form>
+    </div>
+
     <div class="task-list" th:if="${not #lists.isEmpty(tasks)}">
         <div class="task-card" th:each="task : ${tasks}">
             <div class="task-content">
@@ -125,6 +161,7 @@
                 <div class="task-description" th:text="${task.description}" th:if="${task.description != null}">Description</div>
             </div>
             <form th:action="@{/tasks/{id}/priority(id=${task.id})}" method="post">
+                <input type="hidden" name="filter" th:if="${filter != null}" th:value="${filter.name()}">
                 <select name="priority"
                         class="priority-select"
                         th:classappend="${task.priority.name()}"
@@ -138,6 +175,9 @@
         </div>
     </div>
 
-    <p class="empty-state" th:if="${#lists.isEmpty(tasks)}">No tasks found.</p>
+    <p class="empty-state" th:if="${#lists.isEmpty(tasks)}">
+        <span th:if="${filter != null}">No tasks match the selected priority filter.</span>
+        <span th:if="${filter == null}">No tasks found.</span>
+    </p>
 </body>
 </html>
