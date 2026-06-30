@@ -13,8 +13,8 @@
         "Typecheck passes"
       ],
       "priority": 1,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Implemented Task entity with Priority enum (HIGH/MEDIUM/LOW), schema.sql migration, and TaskRepository. Spring Boot 4.x uses schema.sql for DB initialization (no Flyway auto-config in SB4)."
     },
     {
       "id": "US-002",
