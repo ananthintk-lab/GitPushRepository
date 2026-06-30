@@ -35,3 +35,14 @@ Started: Tue Jun 30 21:01:28 IST 2026
   - Verified via HTTP request to running app: all three badge types (HIGH/MEDIUM/LOW) present in response.
   - No MCP browser tools available — HTTP response verification used as proxy for browser check.
 ---
+
+## 2026-06-30T21:30 - US-003
+- Added priority selector dropdown on each task card that saves immediately on change
+- Files changed: task/TaskController.java, task/TaskService.java, templates/tasks/index.html
+- **Learnings for future iterations:**
+  - `onchange="this.form.submit()"` on a `<select>` inside a `<form>` is the simplest Thymeleaf-native approach for immediate-save dropdowns (no JS fetch needed).
+  - Pass enum values to model with `model.addAttribute("priorities", Priority.values())` then iterate in Thymeleaf with `th:each="p : ${priorities}"`.
+  - `th:selected="${p == task.priority}"` correctly selects the current value using enum equality.
+  - `th:classappend` works on `<select>` elements too — lets the same CSS color-coding logic apply to the dropdown as the old badge.
+  - Spring MVC automatically converts the String request param to the `Priority` enum via `@RequestParam Priority priority`.
+---

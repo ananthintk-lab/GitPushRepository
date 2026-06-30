@@ -42,8 +42,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 3,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Added POST /tasks/{id}/priority endpoint in TaskController, updatePriority() in TaskService, and replaced static priority badge in index.html with a styled <select> dropdown that auto-submits on change. Priority values passed to model as model attribute."
     },
     {
       "id": "US-004",
