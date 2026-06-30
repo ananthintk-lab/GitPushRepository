@@ -3,6 +3,7 @@ Started: Tue Jun 30 21:01:28 IST 2026
 ---
 
 ## Codebase Patterns
+- Accept filter params as `String` in Spring MVC controllers and convert to enum manually to safely handle empty string from "All" option in HTML select forms.
 - Spring Boot 4.x removed Flyway auto-configuration from spring-boot-autoconfigure. Use `schema.sql` + `spring.sql.init.mode=always` for DB initialization instead.
 - Spring Boot 4.x uses separate module JARs (spring-boot-jpa, spring-boot-jdbc) for JPA/JDBC auto-config — not in spring-boot-autoconfigure.
 - `JpaDependsOnDatabaseInitializationDetector` in spring-boot-jpa ensures JPA waits for schema.sql to run before validating.
@@ -45,4 +46,15 @@ Started: Tue Jun 30 21:01:28 IST 2026
   - `th:selected="${p == task.priority}"` correctly selects the current value using enum equality.
   - `th:classappend` works on `<select>` elements too — lets the same CSS color-coding logic apply to the dropdown as the old badge.
   - Spring MVC automatically converts the String request param to the `Priority` enum via `@RequestParam Priority priority`.
+---
+
+## 2026-06-30T21:45 - US-004
+- Added filter dropdown (All | HIGH | MEDIUM | LOW) to task list page with URL-persisted filter state
+- Files changed: task/TaskController.java, templates/tasks/index.html
+- **Learnings for future iterations:**
+  - Accept filter as `@RequestParam(required = false) String filter` in Spring MVC and convert to enum manually — Spring's enum conversion throws on empty string from HTML `<option value="">All</option>`.
+  - Hidden `<input type="hidden" name="filter" th:if="${filter != null}" th:value="${filter.name()}">` preserves filter state across priority update POSTs.
+  - After priority update POST, redirect to `/tasks?filter=HIGH` (or just `/tasks`) based on current filter to keep user in filtered view.
+  - `th:if` on the hidden input (not `th:value` with empty default) avoids sending empty param to controller.
+  - No MCP browser tools available — verified via build success and test pass.
 ---

@@ -57,8 +57,8 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 4,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Added ?filter=PRIORITY URL param to GET /tasks. Controller accepts String filter param (safely converts to enum, empty string treated as null). TaskService.findByPriority() used when filter active. Template has a filter dropdown that auto-submits on change; priority update forms pass filter as hidden input to preserve filter state after save. Empty state shows context-specific message when filter is active."
     }
   ]
 }
