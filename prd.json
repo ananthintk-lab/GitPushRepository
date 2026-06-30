@@ -1,0 +1,64 @@
+{
+  "project": "MyApp",
+  "branchName": "ralph/task-priority",
+  "description": "Task Priority System - Add priority levels to tasks",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "Add priority field to database",
+      "description": "As a developer, I need to store task priority so it persists across sessions.",
+      "acceptanceCriteria": [
+        "Add priority column to tasks table: 'high' | 'medium' | 'low' (default 'medium')",
+        "Generate and run migration successfully",
+        "Typecheck passes"
+      ],
+      "priority": 1,
+      "passes": true,
+      "notes": "Implemented Task entity with Priority enum (HIGH/MEDIUM/LOW), schema.sql migration, and TaskRepository. Spring Boot 4.x uses schema.sql for DB initialization (no Flyway auto-config in SB4)."
+    },
+    {
+      "id": "US-002",
+      "title": "Display priority indicator on task cards",
+      "description": "As a user, I want to see task priority at a glance.",
+      "acceptanceCriteria": [
+        "Each task card shows colored priority badge (red=high, yellow=medium, gray=low)",
+        "Priority visible without hovering or clicking",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 2,
+      "passes": true,
+      "notes": "Added Thymeleaf dependency + TaskService, TaskController, DataInitializer, and tasks/index.html template. Priority badges use CSS classes (HIGH=red, MEDIUM=yellow, LOW=gray). Verified via HTTP 200 response containing all three badge types."
+    },
+    {
+      "id": "US-003",
+      "title": "Add priority selector to task edit",
+      "description": "As a user, I want to change a task's priority when editing it.",
+      "acceptanceCriteria": [
+        "Priority dropdown in task edit modal",
+        "Shows current priority as selected",
+        "Saves immediately on selection change",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 3,
+      "passes": true,
+      "notes": "Added POST /tasks/{id}/priority endpoint in TaskController, updatePriority() in TaskService, and replaced static priority badge in index.html with a styled <select> dropdown that auto-submits on change. Priority values passed to model as model attribute."
+    },
+    {
+      "id": "US-004",
+      "title": "Filter tasks by priority",
+      "description": "As a user, I want to filter the task list to see only high-priority items.",
+      "acceptanceCriteria": [
+        "Filter dropdown with options: All | High | Medium | Low",
+        "Filter persists in URL params",
+        "Empty state message when no tasks match filter",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 4,
+      "passes": true,
+      "notes": "Added ?filter=PRIORITY URL param to GET /tasks. Controller accepts String filter param (safely converts to enum, empty string treated as null). TaskService.findByPriority() used when filter active. Template has a filter dropdown that auto-submits on change; priority update forms pass filter as hidden input to preserve filter state after save. Empty state shows context-specific message when filter is active."
+    }
+  ]
+}
