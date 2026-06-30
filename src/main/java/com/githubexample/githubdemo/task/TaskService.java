@@ -28,4 +28,10 @@ public class TaskService {
     public Task findById(Long id) {
         return taskRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Task not found: " + id));
     }
+
+    public Task updatePriority(Long id, Priority priority) {
+        Task task = findById(id);
+        task.setPriority(priority);
+        return taskRepository.save(task);
+    }
 }

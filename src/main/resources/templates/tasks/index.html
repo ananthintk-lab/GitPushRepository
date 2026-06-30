@@ -82,6 +82,37 @@
             color: #888;
             font-style: italic;
         }
+
+        .priority-select {
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            flex-shrink: 0;
+            appearance: none;
+        }
+
+        .priority-select.HIGH {
+            background: #fee2e2;
+            color: #b91c1c;
+            border-color: #fca5a5;
+        }
+
+        .priority-select.MEDIUM {
+            background: #fef9c3;
+            color: #a16207;
+            border-color: #fde047;
+        }
+
+        .priority-select.LOW {
+            background: #f3f4f6;
+            color: #4b5563;
+            border-color: #d1d5db;
+        }
     </style>
 </head>
 <body>
@@ -93,9 +124,17 @@
                 <div class="task-title" th:text="${task.title}">Task title</div>
                 <div class="task-description" th:text="${task.description}" th:if="${task.description != null}">Description</div>
             </div>
-            <span class="priority-badge"
-                  th:classappend="${task.priority.name()}"
-                  th:text="${task.priority.name()}">MEDIUM</span>
+            <form th:action="@{/tasks/{id}/priority(id=${task.id})}" method="post">
+                <select name="priority"
+                        class="priority-select"
+                        th:classappend="${task.priority.name()}"
+                        onchange="this.form.submit()">
+                    <option th:each="p : ${priorities}"
+                            th:value="${p.name()}"
+                            th:text="${p.name()}"
+                            th:selected="${p == task.priority}">MEDIUM</option>
+                </select>
+            </form>
         </div>
     </div>
 
