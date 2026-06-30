@@ -9,6 +9,9 @@ Started: Tue Jun 30 21:01:28 IST 2026
 - The original pom.xml had invalid `spring-boot-starter-data-jpa-test` dependency — replaced with `spring-boot-starter-test`.
 - Use `spring.jpa.hibernate.ddl-auto=none` when relying on schema.sql for table creation.
 - H2 in-memory URL: `jdbc:h2:mem:githubdemo;DB_CLOSE_DELAY=-1`
+- UI layer uses Thymeleaf (`spring-boot-starter-thymeleaf`); templates go in `src/main/resources/templates/`.
+- Use `ApplicationRunner` + `DataInitializer` for seeding sample data on startup (guard with `repository.count() == 0`).
+- Thymeleaf priority badge pattern: `th:classappend="${task.priority.name()}"` appends the enum name as CSS class; define `.HIGH`, `.MEDIUM`, `.LOW` CSS rules for color-coding.
 
 ## 2026-06-30T21:14 - US-001
 - Implemented Task entity with Priority enum (HIGH/MEDIUM/LOW), schema.sql migration, TaskRepository
@@ -20,4 +23,15 @@ Started: Tue Jun 30 21:01:28 IST 2026
   - `spring.sql.init.mode=always` + `schema.sql` in src/main/resources works for DB initialization.
   - JPA ordering is handled by `JpaDependsOnDatabaseInitializationDetector` in spring-boot-jpa 4.0.7.
   - Task package created at `com.githubexample.githubdemo.task` with Priority enum, Task entity, TaskRepository.
+---
+
+## 2026-06-30T21:25 - US-002
+- Implemented Thymeleaf UI layer: task list page with colored priority badges (red=HIGH, yellow=MEDIUM, gray=LOW)
+- Files changed: pom.xml (added thymeleaf starter), task/TaskService.java, task/TaskController.java, task/DataInitializer.java, templates/tasks/index.html
+- **Learnings for future iterations:**
+  - Thymeleaf `th:classappend` appends enum name as CSS class — clean way to drive badge color from enum value.
+  - `DataInitializer implements ApplicationRunner` seeds 4 sample tasks (2 HIGH, 1 MEDIUM, 1 LOW) on startup.
+  - `TaskController` serves GET /tasks → tasks/index template with task list in model.
+  - Verified via HTTP request to running app: all three badge types (HIGH/MEDIUM/LOW) present in response.
+  - No MCP browser tools available — HTTP response verification used as proxy for browser check.
 ---
